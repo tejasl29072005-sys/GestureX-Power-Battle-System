@@ -3,7 +3,7 @@ import mediapipe as mp
 import numpy as np
 import random
 
-# ---------------- INIT ----------------
+# INIT 
 mp_hands = mp.solutions.hands
 hands = mp_hands.Hands(
     max_num_hands=2,
@@ -13,7 +13,7 @@ hands = mp_hands.Hands(
 
 mp_draw = mp.solutions.drawing_utils
 
-# 🔥 FIXED CAMERA INIT
+# FIXED CAMERA INIT
 cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 
 if not cap.isOpened():
@@ -35,11 +35,11 @@ lightning_timer = [0, 0]
 projectiles = []
 fire_particles = []
 
-# ---------------- SMOOTH ----------------
+# SMOOTH 
 def smooth(prev, curr, alpha=0.7):
     return int(prev * alpha + curr * (1 - alpha))
 
-# ---------------- FIRE ----------------
+# FIRE 
 def spawn_fire(x, y):
     for _ in range(8):
         fire_particles.append([
@@ -69,7 +69,7 @@ def update_fire(frame):
 
     fire_particles = new_particles
 
-# ---------------- LIGHTNING ----------------
+# LIGHTNING 
 def draw_lightning(frame, x, y):
     points = [(x, y)]
 
@@ -97,7 +97,7 @@ def draw_lightning(frame, x, y):
             cv2.line(frame, (bx, by), (nx, ny), (255,255,255), 1)
             bx, by = nx, ny
 
-# ---------------- EXPLOSION ----------------
+# EXPLOSION 
 def explosion(frame, x, y):
     overlay = frame.copy()
 
@@ -108,7 +108,7 @@ def explosion(frame, x, y):
     overlay = cv2.GaussianBlur(overlay, (31,31), 0)
     cv2.addWeighted(overlay, 0.6, frame, 0.4, 0, frame)
 
-# ---------------- PROJECTILES ----------------
+# PROJECTILES 
 def spawn_projectile(x, y, kind, direction):
     projectiles.append([x, y, direction, kind])
 
@@ -138,13 +138,13 @@ def update_projectiles(frame):
 
     projectiles = new_list
 
-# ---------------- MAIN LOOP ----------------
+# main loop
 while True:
     success, img = cap.read()
 
     if not success:
         print("⚠️ Frame not captured")
-        continue   # 🔥 don't break → keep trying
+        continue   
 
     img = cv2.flip(img, 1)
     h, w, _ = img.shape
